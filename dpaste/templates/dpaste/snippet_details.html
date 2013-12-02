@@ -60,6 +60,10 @@
         <a class="btn" href="{% url "snippet_details_raw" snippet.secret_id %}"><i class="icon-align-left"></i> {% trans "View Raw" %}</a>
         <a class="btn" href="{% url "snippet_gist" snippet.secret_id %}"
             rel="nofollow" title="Create a secret Gist"><i class="icon-share"></i> {% trans "Gist" %}</a>
+        <label class="btn input-prepend" for="wordwrap">
+            <input type="checkbox" id="wordwrap" checked/>
+            {% trans "Wordwrap" %}
+        </label>
     </div>
 
     <!-- ======================================================================
@@ -101,7 +105,6 @@ jQuery(function($) {
         $('#snippet-diff').slideDown('fast');
         $('#snippet-diff form').submit();
     });
-
 
     $('#diffform').submit(function() {
         var a = $('input[name="a"]:checked').val(),
@@ -165,6 +168,35 @@ jQuery(function($) {
 
         window.location.hash = hash;
     });
+
+    /* ------------------------------------------------------------------------
+       Wordwrap
+    ------------------------------------------------------------------------ */
+
+    function setCookie(c_name, value, exdays)
+    {
+        var exdate=new Date();
+        exdate.setDate(exdate.getDate() + exdays);
+        var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+        document.cookie=c_name + "=" + c_value;
+    }
+
+    $('#wordwrap').change(function(e){
+        var code = $('ol.code');
+
+        if(this.checked) {
+            code.removeClass('overflow');
+            $.cookie('wordwrap', 'yes');
+        } else {
+            code.addClass('overflow');
+            $.cookie('wordwrap', 'no');
+        }
+    });
+
+    // Initial state
+    if($.cookie('wordwrap') == 'no') {
+        $('#wordwrap').trigger('click');
+    }
 });
 </script>
 {% endblock %}

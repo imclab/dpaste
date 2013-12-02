@@ -28,7 +28,8 @@
 </div>
 
 {% block script_footer %}
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+<script src="{% static "dpaste/jquery.js" %}"></script>
+<script src="{% static "dpaste/jquery.cookie.js" %}"></script>
 <script>
 jQuery(function($) {
     $('.autofocus textarea:first').focus();

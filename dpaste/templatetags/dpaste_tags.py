@@ -9,5 +9,6 @@ def in_list(value, arg):
 
 @register.filter
 def highlight(snippet):
-    h = pygmentize(snippet.content, snippet.lexer)
+    h = pygmentize(snippet.content, snippet.lexer,
+        nbsp=True)
     return h.splitlines()

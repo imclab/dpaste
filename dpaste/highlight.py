@@ -1,7 +1,8 @@
+import re
+from django.conf import settings
 from pygments import highlight
 from pygments.lexers import *
 from pygments.formatters import HtmlFormatter
-from django.conf import settings
 
 """
 # Get a list of all lexer, and then remove all lexer which have '-' or '+'
@@ -109,10 +110,22 @@ class NakedHtmlFormatter(HtmlFormatter):
         for i, t in source:
             yield i, t
 
-def pygmentize(code_string, lexer_name=LEXER_DEFAULT):
+SPACE_START = re.compile(r'^(\s+)', re.UNICODE | re.MULTILINE)
+
+def SPACE_REPL(match):
+    length = match.end() - match.start()
+    print length
+    return u'&nbsp;' * length
+
+def pygmentize(code_string, lexer_name=LEXER_DEFAULT, nbsp=False):
     try:
         lexer = lexer_name and get_lexer_by_name(lexer_name) \
-                         or PythonLexer()
+                            or PythonLexer()
     except Exception as e:
+        if settings.DEBUG:
+            raise Exception(e)
         lexer = PythonLexer()
-    return highlight(code_string, lexer, NakedHtmlFormatter())
+    code = highlight(code_string, lexer, NakedHtmlFormatter())
+    if nbsp:
+        code = SPACE_START.sub(SPACE_REPL, code)
+    return code

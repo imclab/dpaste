@@ -114,7 +114,6 @@ SPACE_START = re.compile(r'^(\s+)', re.UNICODE | re.MULTILINE)
 
 def SPACE_REPL(match):
     length = match.end() - match.start()
-    print length
     return u'&nbsp;' * length
 
 def pygmentize(code_string, lexer_name=LEXER_DEFAULT, nbsp=False):
